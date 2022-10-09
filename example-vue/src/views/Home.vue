@@ -2,7 +2,7 @@
   <div>
     <div v-if="loading">__SKELETON_HOME_CONTENT__</div>
     <div data-skeleton-root="HOME">
-      <h1>test</h1>
+      <h1>HOME</h1>
       <ul>
         <li v-for="item in list" :key="item">
           <router-link :to="item">{{ item }}</router-link>
