@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-const list = ['/list', '/media']
+const list = ['/list', '/media','/demo']
 const loading = false
 
 </script>

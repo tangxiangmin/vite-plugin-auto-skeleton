@@ -1,3 +1,6 @@
+import {LIST_NUM} from "./constant";
+
+// todo 处理哪些使用px的地方
 export function renderText($dom: JQuery) {
   let fontSize = parseFloat($dom.css("font-size"));
   let lineHeight: string | number = $dom.css("line-height");
@@ -13,22 +16,18 @@ export function renderText($dom: JQuery) {
   const firstColorPoint = (((1 - textHeightRatio) / 2) * 100).toFixed(2);
   const secondColorPoint = (((1 - textHeightRatio) / 2 + textHeightRatio) * 100).toFixed(2);
 
+  // const style = `--fp:${firstColorPoint}%;--sp:${secondColorPoint}%;--lh:${(lineHeight / fontSize).toFixed(2)};`;
   const style = `--fp:${firstColorPoint}%;--sp:${secondColorPoint}%;--lh:${lineHeight}px;`;
   $dom.addClass('sk-text');
   $dom.attr("style", style);
 }
 
 export function renderImg($dom: JQuery) {
-  let width = $dom.width()
-  let height = $dom.height()
-
   let emptyImage = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
   $dom.attr("src", emptyImage);
 
   $dom.css({
     background: "#eee",
-    width: width + "px",
-    height: height + "px"
   })
 }
 
@@ -55,13 +54,15 @@ export function renderList($dom: JQuery) {
 
   let $children = $dom.children()
   let $child = $children.first()
-  let len = $children.length
+  const len = $children.length
+
+  const num = parseInt($dom.attr(LIST_NUM) as string, 10) || len
 
   // 列表元素子节点统一，保证页面骨架整齐
   for (let i = 1; i < len; ++i) {
     $children.eq(i).remove()
   }
-  for (let i = 1; i < len; i++) {
+  for (let i = 1; i < num; i++) {
     let tmp = $child.clone(true)
     $dom.append(tmp)
   }

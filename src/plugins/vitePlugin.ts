@@ -10,7 +10,6 @@ import cssSkeletonGroupPlugin from "./cssSkeletonGroupPlugin";
 import fs from 'fs-extra'
 
 const filename = './src/skeleton/content.json'
-const wrapSelector = '.sk-wrap'
 
 export function SkeletonPlaceholderPlugin() {
   return {
@@ -25,7 +24,7 @@ export function SkeletonPlaceholderPlugin() {
           file = {}
         }
         // 约定对应的骨架屏占位符
-        let code = src.replace(/__SKELETON_(.*?)_CONTENT__/igm, function (match) {
+        let code = src.replace(/__SKELETON_(.*?)_CONTENT__/gm, function (match) {
           const record = file[match] || {}
           return record.content || ''
         })
@@ -51,7 +50,7 @@ export function SkeletonApiPlugin() {
     content = content.replace(/data-skeleton-.*?=.*?\s/igm, '') // 清空骨架屏标签
       .replace(/data-v-.*?=""/igm, '') // 清空scopeid
 
-    content = `<div class="${wrapSelector.substr(1)}">${content}</div>` // 样式类包裹，不再依赖scopeid对应的样式
+    content = `<div class="${name.toLowerCase()}">${content}</div>` // 样式类包裹，不再依赖scopeid对应的样式
 
     file[name] = {
       content,
@@ -76,7 +75,13 @@ export function SkeletonApiPlugin() {
       const {query} = parseVueRequest(id)
 
       if (query.type === 'style') {
-        const result = postcss([cssSkeletonGroupPlugin({wrapSelector})]).process(src)
+        // @ts-ignore
+        const {skeleton} = query
+        if (!skeleton) {
+          return src
+        }
+        const name = `__SKELETON_${skeleton}_CONTENT__`.toLowerCase()
+        const result = postcss([cssSkeletonGroupPlugin({wrapSelector: `.${name}`})]).process(src)
         return result.css
       }
       return src

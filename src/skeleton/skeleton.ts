@@ -10,11 +10,9 @@ import {SKELETON_TYPE, KEY, KEY_EXCLUDE} from './constant'
 
 const {IGNORE, TEXT, IMAGE, BLOCK, SUB_BLOCK, BORDER, LIST, BUTTON, BACKGROUND_IMAGE, INPUT, LIST_ITEM} = SKELETON_TYPE
 
-
 function checkNodeVisible($node: JQuery) {
+  //  校验各种不可见的情况
   // https://segmentfault.com/q/1010000020091228
-  // todo 校验各种不可见的情况
-
   return $node.css('display') !== 'none'
 }
 
@@ -45,7 +43,7 @@ function isText(node: Element) {
 }
 
 function isButton(node: Element) {
-  // todo 需要按照规范编写语义化的代码
+  // 需要按照规范编写语义化的代码
   return node.nodeType === 1 &&
     (node.tagName === 'BUTTON' || (node.tagName === 'A' && node.getAttribute('role') === 'button'))
 }
@@ -186,7 +184,6 @@ function preset(config: SkeletonConfig) {
   ignore && $(ignore).attr(KEY, IGNORE)
 }
 
-// todo 一些初始化操作
 export function renderSkeleton(sel: string, config: SkeletonConfig) {
   let $root = $(sel).eq(0)
   $root.addClass("sk")

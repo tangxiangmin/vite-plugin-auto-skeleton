@@ -1,6 +1,6 @@
 export const KEY = "data-skeleton-type"
 export const KEY_EXCLUDE = 'data-skeleton-exclude-type'
-export const DEEP_KEY = 'data-skeleton-deep'
+export const LIST_NUM = "data-skeleton-list-num"
 
 export enum SKELETON_TYPE {
   IGNORE = "ignore",

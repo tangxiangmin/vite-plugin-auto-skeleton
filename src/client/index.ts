@@ -1,4 +1,4 @@
-import {renderSkeleton} from "./skeleton/skeleton";
+import {renderSkeleton} from "../skeleton/skeleton";
 
 
 async function sendContent(body: any) {
