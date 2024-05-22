@@ -1,14 +1,23 @@
 import $ from 'jquery'
 
 import {
-  renderText, renderImg, renderBlock, renderSubBlock, renderBorder, renderButton,
-  renderList, renderListItem, renderBackgroundImage, renderInput, renderIgnore
+  renderBackgroundImage,
+  renderBlock,
+  renderBorder,
+  renderButton,
+  renderIgnore,
+  renderImg,
+  renderInput,
+  renderList,
+  renderListItem,
+  renderSubBlock,
+  renderText,
 } from './strategy'
 
 
-import {SKELETON_TYPE, KEY, KEY_EXCLUDE} from './constant'
+import { KEY, KEY_EXCLUDE, SKELETON_TYPE } from './constant'
 
-const {IGNORE, TEXT, IMAGE, BLOCK, SUB_BLOCK, BORDER, LIST, BUTTON, BACKGROUND_IMAGE, INPUT, LIST_ITEM} = SKELETON_TYPE
+const { IGNORE, TEXT, IMAGE, BLOCK, SUB_BLOCK, BORDER, LIST, BUTTON, BACKGROUND_IMAGE, INPUT, LIST_ITEM } = SKELETON_TYPE
 
 function checkNodeVisible($node: JQuery) {
   //  校验各种不可见的情况
@@ -17,18 +26,18 @@ function checkNodeVisible($node: JQuery) {
 }
 
 function hasBorder($node: JQuery) {
-  let style = $node.css("border-width")
+  const style = $node.css('border-width')
   return style && style !== '0px'
 }
 
 function hasBackgroundImage($node: JQuery) {
-  let re = /url/ // 处理背景图片
-  let background = $node.css("background")
+  const re = /url/ // 处理背景图片
+  const background = $node.css('background')
   return re.test(background)
 }
 
 function isImage(node: Element) {
-  return node.tagName === "IMG"
+  return node.tagName === 'IMG'
 }
 
 function isList(node: Element) {
@@ -36,32 +45,32 @@ function isList(node: Element) {
 }
 
 function isText(node: Element) {
-  return node.childNodes &&
+  return node.childNodes
     // node.childNodes.length === 1 &&
-    node.childNodes[0] && node.childNodes[0].nodeType === 3 &&
-    /\S/.test(node.childNodes[0]?.textContent as string)
+    && node.childNodes[0] && node.childNodes[0].nodeType === 3
+    && /\S/.test(node.childNodes[0]?.textContent as string)
 }
 
 function isButton(node: Element) {
   // 需要按照规范编写语义化的代码
-  return node.nodeType === 1 &&
-    (node.tagName === 'BUTTON' || (node.tagName === 'A' && node.getAttribute('role') === 'button'))
+  return node.nodeType === 1
+    && (node.tagName === 'BUTTON' || (node.tagName === 'A' && node.getAttribute('role') === 'button'))
 }
 
 function isInput(node: Element) {
   if (node.tagName === 'INPUT') {
-    let type = node.getAttribute("type") as string
+    const type = node.getAttribute('type') as string
     return ['text', 'password', 'search'].includes(type)
   }
   return false
 }
 
 function isSVG(node: Element) {
-  return node.tagName === "SVG"
+  return node.tagName === 'SVG'
 }
 
 function getNodeSkeletonType($dom: JQuery) {
-  let node = $dom[0]
+  const node = $dom[0]
   if (!node) return
 
   // 按照常见优先级指定对应type
@@ -95,23 +104,23 @@ function getNodeSkeletonType($dom: JQuery) {
 }
 
 function replaceTextNode($dom: JQuery) {
-  let type = $dom.attr(KEY)
+  const type = $dom.attr(KEY)
   if (type === TEXT) return
   // 文本节点
-  let $texts = $dom.contents().filter(function () {
-    return this.nodeType === 3; // 文本节点
+  const $texts = $dom.contents().filter(function () {
+    return this.nodeType === 3 // 文本节点
   })
   $texts.each(function () {
-    let node = this
-    let $this = $(this)
+    const node = this
+    const $this = $(this)
     // 过滤空文本
     if (!$this.text().trim()) {
       return
     }
     // 使用一个内联元素包裹起来，方便渲染对应宽度的背景颜色
-    let span = document.createElement('span')
+    const span = document.createElement('span')
 
-    let $span = $(span)
+    const $span = $(span)
     $span.attr(KEY, TEXT)
     $span.insertAfter($this)
     $this.remove()
@@ -130,12 +139,12 @@ function preorder($dom: JQuery) {
     return
   }
 
-  const type = ($dom.attr(KEY) || getNodeSkeletonType($dom)) as SKELETON_TYPE  // 自动检测节点类型，并附上type
+  const type = ($dom.attr(KEY) || getNodeSkeletonType($dom)) as SKELETON_TYPE // 自动检测节点类型，并附上type
 
-  let excludeType = $dom.attr(KEY_EXCLUDE)
+  const excludeType = $dom.attr(KEY_EXCLUDE)
 
   if (!excludeType || type !== excludeType) {
-    let handlers = {
+    const handlers = {
       [TEXT]: renderText,
       [IMAGE]: renderImg,
       [BLOCK]: renderBlock,
@@ -149,7 +158,7 @@ function preorder($dom: JQuery) {
       [IGNORE]: renderIgnore,
     }
 
-    let handler = handlers[type]
+    const handler = handlers[type]
     handler && handler($dom)
     // 不再执行后面的模块
     if ([SUB_BLOCK].includes(type)) {
@@ -163,20 +172,20 @@ function preorder($dom: JQuery) {
     const $this = $(this)
     // 递归
     preorder($this)
-  });
-
+  })
 }
 
-type SkeletonConfig = {
-  selector: any, ignore: any
+interface SkeletonConfig {
+  selector: any
+  ignore: any
 }
 
 function preset(config: SkeletonConfig) {
-  let {selector = {}, ignore} = config
+  const { selector = {}, ignore } = config
 
   // 提前设置一些类型参数
-  for (let key of Object.keys(selector)) {
-    const {include, exclude} = selector[key]
+  for (const key of Object.keys(selector)) {
+    const { include, exclude } = selector[key]
     include && $(include).attr(KEY, key)
     exclude && $(exclude).attr(KEY_EXCLUDE, key)
   }
@@ -185,23 +194,23 @@ function preset(config: SkeletonConfig) {
 }
 
 export function renderSkeleton(sel: string, config: SkeletonConfig) {
-  let $root = $(sel).eq(0)
-  $root.addClass("sk")
+  const $root = $(sel).eq(0)
+  $root.addClass('sk')
 
   preset(config)
 
   preorder($root)
 
   const name = $root.attr('data-skeleton-root')
-  const content = $root.prop("outerHTML")
+  const content = $root.prop('outerHTML')
 
   return {
     name: `__SKELETON_${name}_CONTENT__`,
-    content: content
+    content,
   }
 }
 
 export default {
   SKELETON_TYPE,
-  KEY
+  KEY,
 }

@@ -1,28 +1,24 @@
 {
   "name": "vite-plugin-auto-skeleton",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "vite web skeleton",
-  "main": "src/client/inject.ts",
+  "main": "./dist/client.js",
+  "type": "module",
   "scripts": {
-    "build:es6": "tsc --module es6 --target es2015 --outDir dist/es6",
-    "build:cjs": "tsc --module commonjs --target es5 --outDir dist/cjs"
+    "build": "tsup && cp src/style/skeleton.css ./dist"
   },
-  "files": [
-    "src",
-    "dist/es6",
-    "dist/cjs"
-  ],
+  "files": ["dist"],
   "exports": {
-    "./skeleton.scss": "./src/style/skeleton.scss",
-    "./vitePlugin": {
-      "types": "./dist/es6/plugins/vitePlugin.d.ts",
-      "import": "./dist/es6/plugins/vitePlugin.js",
-      "require": "./dist/cjs/plugins/vitePlugin.js"
+    "./skeleton.css": "./dist/skeleton.css",
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "import": "./dist/vite.js",
+      "require": "./dist/vite.cjs"
     },
     "./client": {
-      "types": "./dist/es6/client/index.d.ts",
-      "import": "./dist/es6/client/index.js",
-      "require": "./dist/cjs/client/index.js"
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js",
+      "require": "./dist/client.cjs"
     }
   },
   "keywords": [],
@@ -30,10 +26,24 @@
   "license": "ISC",
   "dependencies": {
     "@types/jquery": "^3.5.14",
-    "@vitejs/plugin-vue": "^3.1.2",
-    "body-parser": "^1.20.0",
+    "body-parser": "^1.20.2",
     "fs-extra": "^10.1.0",
-    "jquery": "^3.6.1",
-    "postcss": "^8.4.16"
+    "jquery": "^3.6.1"
+  },
+  "peerDependencies": {
+    "body-parser": "*",
+    "fs-extra": "*"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "2.18.0",
+    "@types/body-parser": "^1.19.5",
+    "@types/fs-extra": "^11.0.4",
+    "@typescript-eslint/eslint-plugin": "^5.6.0",
+    "@typescript-eslint/parser": "^5.6.0",
+    "eslint": "^9.3.0",
+    "eslint-config-shymean": "^2.0.6",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11"
   }
 }

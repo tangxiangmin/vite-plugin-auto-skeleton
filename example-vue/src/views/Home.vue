@@ -14,14 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-const list = ['/list', '/media','/demo']
+const list = ['/media','/demo']
 const loading = false
 
 </script>
-
-<style scoped lang="scss">
-.test1, .test2 {
-  color: red;
-}
-
-</style>
